@@ -1,0 +1,4 @@
+com\lixf\hadoop\dome\rpc\RPCService.class
+com\lixf\hadoop\dome\hdfs\HdfsDome.class
+com\lixf\hadoop\dome\rpc\Bizable.class
+com\lixf\hadoop\dome\rpc\RPCClient.class
