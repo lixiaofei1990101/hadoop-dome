@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 /**
  * 
   * @ClassName: WordCount
-  * @Description: 
+  * @Description: 首先确定业务的逻辑，然后确定输入输出的样式
   * @Company:www.szmsd.com
   * @author:Administrator
   * @date:2016年10月24日 下午10:52:11
@@ -24,18 +24,31 @@ public class WordCount {
 	
 	public static void main(String[] args) throws Exception{
 		Configuration conf = new Configuration();
+		//构建job对象
 		Job job = Job.getInstance(conf);
+		//main方法所在的类
 		job.setJarByClass(WordCount.class);
+		//设置Mapper的相关属性
 		job.setMapperClass(MyMapper.class);
+		//map输出key值得类型（String）
 		job.setMapOutputKeyClass(Text.class);
+		//map输出value值得类型
 		job.setMapOutputValueClass(LongWritable.class);
 		FileInputFormat.setInputPaths(job, new Path("/input/words.txt"));
+		//设置reduce的相关属性
 		job.setReducerClass(MyReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(LongWritable.class);
-		FileOutputFormat.setOutputPath(job, new Path("/root/wcout"));
+		FileOutputFormat.setOutputPath(job, new Path("/output/wcout"));
+		job.waitForCompletion(true);
 	}
-	
+	/**
+	  * @ClassName: MyMapper
+	  * @Description: 数据拆解过程
+	  * @Company:www.szmsd.com
+	  * @author:Administrator
+	  * @date:2016年10月26日 下午10:21:44
+	 */
 	private static class MyMapper extends Mapper<LongWritable, Text, Text, LongWritable>{
 
 		@Override
@@ -49,7 +62,13 @@ public class WordCount {
 		}
 		
 	}
-	
+	/**
+	  * @ClassName: MyReducer
+	  * @Description: 数据的聚合过程
+	  * @Company:www.szmsd.com
+	  * @author:Administrator
+	  * @date:2016年10月26日 下午10:21:59
+	 */
 	private static class MyReducer extends Reducer<Text, LongWritable,Text, LongWritable>{
 
 		@Override
