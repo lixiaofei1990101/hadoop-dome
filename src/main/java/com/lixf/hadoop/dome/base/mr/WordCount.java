@@ -1,4 +1,4 @@
-package com.lixf.hadoop.dome.mapreduce;
+package com.lixf.hadoop.dome.base.mr;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package com.lixf.hadoop.dome.hdfs;
+package com.lixf.hadoop.dome.base.hdfs;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

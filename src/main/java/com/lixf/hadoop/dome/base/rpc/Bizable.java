@@ -1,4 +1,4 @@
-package com.lixf.hadoop.dome.rpc;
+package com.lixf.hadoop.dome.base.rpc;
 /**
  * 
   * @ClassName: Bizable

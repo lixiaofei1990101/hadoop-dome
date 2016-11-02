@@ -1,4 +1,4 @@
-package com.lixf.hadoop.dome.rpc;
+package com.lixf.hadoop.dome.base.rpc;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.ipc.RPC;
