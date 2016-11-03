@@ -1,5 +1,6 @@
 package com.lixf.hadoop.dome.mr;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -32,10 +33,12 @@ public class GPRSCount {
 		//当mapper的输出key和value和Reducer输出类型一致的时候下面这个地方可以省略掉
 		//job.setMapOutputKeyClass(Text.class);
 		//job.setMapOutputValueClass(DataBean.class);
+		//文件系统中要输入到map中的文件地址路径（/input/datacount.dat）
 		FileInputFormat.setInputPaths(job, new Path(args[0]));
 		job.setReducerClass(WCReduce.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(DataBean.class);
+		//reduce执行完成之后的结果输出的路径（/output/grrscount.txt）
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		job.waitForCompletion(true);
 	}
