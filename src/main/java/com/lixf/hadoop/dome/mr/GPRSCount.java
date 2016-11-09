@@ -1,8 +1,8 @@
 package com.lixf.hadoop.dome.mr;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -10,6 +10,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -38,8 +39,12 @@ public class GPRSCount {
 		job.setReducerClass(WCReduce.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(DataBean.class);
-		//reduce执行完成之后的结果输出的路径（/output/grrscount.txt）
+		//reduce执行完成之后的结果输出的路径（/output/grrscount）
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		
+		job.setPartitionerClass(ProviderPartitioner.class);
+		job.setNumReduceTasks(Integer.parseInt(args[2]));
+		
 		job.waitForCompletion(true);
 	}
 	
@@ -72,6 +77,41 @@ public class GPRSCount {
 			}
 			DataBean bean = new DataBean("", up_sum, down_sum);
 			context.write(key, bean);
+		}
+	}
+	/**
+	  * @ClassName: ProviderPartitioner
+	  * @Description: 数据分区处理
+	  * @Company:www.szmsd.com
+	  * @author:Administrator
+	  * @date:2016年11月9日 下午9:29:05
+	 */
+	public static class ProviderPartitioner extends Partitioner<Text, DataBean>{
+		private static Map<String, Integer> provierMap = new HashMap<String,Integer>();
+		static{
+			provierMap.put("135", 1);
+			provierMap.put("136", 1);
+			provierMap.put("137", 1);
+			provierMap.put("138", 1);
+			provierMap.put("139", 1);
+			provierMap.put("150", 2);
+			provierMap.put("159", 2);
+			provierMap.put("182", 3);
+			provierMap.put("183", 3);
+		}
+		@Override
+		/**
+		 * 进行分区，返回分区号
+		 * 将前面统计的数据按照运营商进行分区处理
+		 */
+		public int getPartition(Text key, DataBean value, int numPartitions) {
+			String account = key.toString();
+			String subValue = account.substring(0, 3);
+			Integer code = provierMap.get(subValue);
+			if (code == null) {
+				code = 0;
+			}
+			return code;
 		}
 		
 	}

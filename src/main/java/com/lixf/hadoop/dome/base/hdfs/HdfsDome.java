@@ -11,6 +11,7 @@ import java.net.URI;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,6 @@ import org.junit.Test;
   * @date:2016年10月15日 下午2:41:37
  */
 public class HdfsDome {
-	
 	private static FileSystem fs;
 	/**
 	  * @Title: init
