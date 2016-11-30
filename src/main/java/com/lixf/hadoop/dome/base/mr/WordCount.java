@@ -34,12 +34,12 @@ public class WordCount {
 		job.setMapOutputKeyClass(Text.class);
 		//map输出value值得类型
 		job.setMapOutputValueClass(LongWritable.class);
-		FileInputFormat.setInputPaths(job, new Path("/input/words.txt"));
+		FileInputFormat.setInputPaths(job, new Path("hdfs://192.168.10.200:9000/data/input/test"));
 		//设置reduce的相关属性
 		job.setReducerClass(MyReducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(LongWritable.class);
-		FileOutputFormat.setOutputPath(job, new Path("/output/wcout"));
+		FileOutputFormat.setOutputPath(job, new Path("hdfs://192.168.10.200:9000/data/output/wordcount"));
 		job.waitForCompletion(true);
 	}
 	/**
