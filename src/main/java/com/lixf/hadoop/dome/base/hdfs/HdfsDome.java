@@ -1,92 +1,84 @@
-package com.lixf.hadoop.dome.base.hdfs;
+﻿package com.lixf.hadoop.dome.base.hdfs;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hdfs.server.namenode.NameNode;
 import org.apache.hadoop.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
 
-/**
-  * @ClassName: HdfsDome
-  * @Description: 
-  * @Company:www.szmsd.com
-  * @author:Administrator
-  * @date:2016年10月15日 下午2:41:37
- */
 public class HdfsDome {
-	private static FileSystem fs;
-	/**
-	  * @Title: init
-	  * @Description: 初始化
-	  * @throws Exception 
-	  * @return void 
-	  * @throws
-	 */
-	@Before
-	public void init() throws Exception{
-		fs = FileSystem.get(new URI("hdfs://hadoop-master:9000"), new Configuration(),"root");
+
+	public static void main(String[] args) throws Exception {
+//		read();
+		
+//		write();
+		
+//		HdfsUtils.readHDFSFile("/data/input/upload");
+		
+//		HdfsUtils.writeHDFSFile("/data/input/words", "E:\\Apache\\hadoop_test_data\\words");
+		
+//		HdfsUtils.uploadFile("E:\\Apache\\hadoop_test_data\\words", "/data/input/words");
+		
+//		HdfsUtils.downloadFile("E:\\Apache\\hadoop_test_data\\words.txt", "/data/input/words");
+		
+//		HdfsUtils.reNameFile("/data/input/upload", "/data/input/upload.txt");
+		
+//		HdfsUtils.delFile("/data/input/upload.txt");
+		
+//		HdfsUtils.mkDir("/data/input/a");
+		
+//		HdfsUtils.delDir("/data/input/a");
+//		
+//		HdfsUtils.getFileListInfo("/data/input/words");
+		
+//		HdfsUtils.getFileInDnPosition("/data/input/words");
+		
+//		HdfsUtils.getDNInfo();
+		
+		HdfsUtils.createFileAndWriteStr("/data/input/upload","你好,中国，chinese");
 	}
-	/**
-	  * @Title: getFile
-	  * @Description: 下载文件
-	  * @throws Exception 
-	  * @return void 
-	  * @throws
-	 */
-	@Test
-	public void getFile() throws Exception{
-		//hdfs文件系统中存放的路径
-		InputStream input = fs.open(new Path("/input/jdk-7u76-linux-x64.tar.gz"));
-		//下载到本地的路径
-		OutputStream out = new FileOutputStream("E://jdk-1.7");
-		IOUtils.copyBytes(input, out, 4096,true);
+
+	//重复上传同名文件会覆盖
+	public static void write() throws IOException, URISyntaxException,
+			InterruptedException {
+		String uri = "/data/input/upload";
+		Configuration conf = new Configuration();
+		conf.set("fs.defaultFS", "hdfs://hadoop-master:9000");
+		FileSystem fileSystem = FileSystem.get(new URI(uri), conf);
+		FSDataOutputStream outStream = fileSystem.create(new Path(uri));
+		FileInputStream inStream = new FileInputStream(new File("E:\\Apache\\hadoop_test_data\\upload"));
+		try {
+			IOUtils.copyBytes(inStream, outStream, 4096, false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeStream(inStream);
+			IOUtils.closeStream(outStream);
+			
+		}
 	}
-	/**
-	  * @Title: uploadFile
-	  * @Description:上传文件 
-	  * @throws Exception 
-	  * @return void 
-	  * @throws
-	 */
-	@Test
-	public void uploadFile() throws Exception{
-		InputStream in = new FileInputStream("E://hadoop-test-dir/redis.docx");
-		OutputStream out = fs.create(new Path("/input/redis.docx"));
-		IOUtils.copyBytes(in, out, 4096, true);
+
+	public static void read() throws IOException, URISyntaxException,
+			InterruptedException {
+		String uri = "/data/input/test";
+		Configuration conf = new Configuration();
+		conf.set("fs.defaultFS", "hdfs://hadoop-master:9000");
+		FileSystem fileSystem = FileSystem.get(new URI(uri), conf);
+		FSDataInputStream inStream = fileSystem.open(new Path(uri));
+		try {
+			IOUtils.copyBytes(inStream, System.out, 4096, false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			IOUtils.closeStream(inStream);
+		}
 	}
-	/**
-	  * @Title: mkdirFile
-	  * @Description: 创建文件
-	  * @throws Exception 
-	  * @return void 
-	  * @throws
-	 */
-	@Test
-	public void mkdirFile() throws Exception{
-		boolean flag = fs.mkdirs(new Path("/test"));
-		System.out.println(flag);
-	}
-	/**
-	  * @Title: deleteFile
-	  * @Description: 删除文件
-	  * @throws Exception 
-	  * @return void 
-	  * @throws
-	 */
-	@Test
-	public void deleteFile()throws Exception{
-		//false表示不进行递归删除
-		boolean flag = fs.delete(new Path("/test"), false);
-		System.out.println(flag);
-	}
+
 }

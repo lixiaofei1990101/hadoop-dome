@@ -16,7 +16,7 @@ import org.apache.hadoop.ipc.RPC;
 public class RPCClient{
 	
 	public static void main(String[] args) throws Exception{
-		Bizable client = (Bizable)RPC.getProxy(Bizable.class, 10000, new InetSocketAddress("192.168.77.1", 9527), new Configuration());
+		Bizable client = (Bizable)RPC.getProxy(Bizable.class, 10000, new InetSocketAddress("192.168.10.200", 9527), new Configuration());
 	    String user = client.getUser("123");
 	    System.out.println(user);
 	}
