@@ -42,7 +42,9 @@ public class HdfsDome {
 		
 //		HdfsUtils.getDNInfo();
 		
-		HdfsUtils.createFileAndWriteStr("/data/input/upload","你好,中国，chinese");
+//		HdfsUtils.createFileAndWriteStr("/data/input/upload","你好,中国，chinese");
+		
+//		HdfsUtils.putMerge("E:\\Apache\\hadoop_test_data\\list", "/data/output/merge");
 	}
 
 	//重复上传同名文件会覆盖

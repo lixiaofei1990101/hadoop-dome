@@ -35,15 +35,16 @@ public class GPRSCount {
 		//job.setMapOutputKeyClass(Text.class);
 		//job.setMapOutputValueClass(DataBean.class);
 		//文件系统中要输入到map中的文件地址路径（/input/datacount.dat）
-		FileInputFormat.setInputPaths(job, new Path(args[0]));
+		FileInputFormat.setInputPaths(job, new Path("hdfs://192.168.10.200:9000/data/input/GPRS.dat"));
 		job.setReducerClass(WCReduce.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(DataBean.class);
 		//reduce执行完成之后的结果输出的路径（/output/grrscount）
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		FileOutputFormat.setOutputPath(job, new Path("hdfs://192.168.10.200:9000/data/output/groupcount"));
 		
-		job.setPartitionerClass(ProviderPartitioner.class);
-		job.setNumReduceTasks(Integer.parseInt(args[2]));
+		//对数据进行分片处理,在进行map处理后的数据进行分片，然后交给reduce进行处理
+//		job.setPartitionerClass(ProviderPartitioner.class);
+//		job.setNumReduceTasks(Integer.parseInt("4"));
 		
 		job.waitForCompletion(true);
 	}

@@ -264,18 +264,6 @@ public class HdfsUtils {
 			System.out.println("Length:"+ bls[i].getLength());
 			System.out.println("Offset:"+ bls[i].getOffset());
 		}
-		// for(BlockLocation bl :bls){
-		// System.out.println("Hosts:");
-		// for(String host : bl.getHosts()){
-		// System.out.println(host);
-		// }
-		// System.out.println("Names:"+bl.getNames());
-		// for(String host : bl.getNames()){
-		// System.out.println(host);
-		// }
-		// System.out.println("Length:"+bl.getLength());
-		// System.out.println("Offset:"+bl.getOffset());
-		// }
 
 	}
 	/**
@@ -294,5 +282,22 @@ public class HdfsUtils {
 		FSDataOutputStream out = fs.create(path);
 		out.writeUTF(strInto);
 		fs.close();
+	}
+	
+	public static void putMerge(String LocalDir, String fsFile) throws Exception{
+		Configuration  conf = new Configuration();
+		FileSystem fs = getFileSystem(); 
+		FileSystem local = FileSystem.getLocal(conf);
+		Path localDir = new Path(LocalDir);
+        Path HDFSFile = new Path(fsFile);
+        FileStatus[] fileList =  local.listStatus(localDir);
+        FSDataOutputStream out = fs.create(HDFSFile); 
+        for (FileStatus fileStatus : fileList) {
+        	Path temp = fileStatus.getPath();
+            FSDataInputStream in = local.open(temp);
+            IOUtils.copyBytes(in, out, 4096, false);    //读取in流中的内容放入out
+            in.close(); //完成后，关闭当前文件输入流
+		}
+        out.close();
 	}
 }
